@@ -1,5 +1,6 @@
 AWS = require 'aws-sdk'
 CONFIG = require './config/config.json'
+q = require 'q'
 
 AWS.config.loadFromPath('config/aws_credentials.json')
 
