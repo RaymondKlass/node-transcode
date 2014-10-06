@@ -1,19 +1,37 @@
 AWS = require 'aws-sdk'
+md5 = require 'MD5'
+
 CONFIG = require './config/config.json'
-q = require 'q'
+Q = require 'q'
 
 AWS.config.loadFromPath('config/aws_credentials.json')
 
-# An example to list all buckets...
-#s3 = new AWS.S3()
-#s3.listBuckets( (err, data) ->
-#  for bucket in data.Buckets
-#    console.log(bucket.Name)
-#)
+
+pipeline_hash = (args...) ->
+  big_arg = ''
+  big_arg += String(arg) for arg in args
+  return md5(big_arg)
+
+
 
 # Elastic Transcoder
 eTrans = new AWS.ElasticTranscoder()
 
-eTrans.listPipelines( (err, data) ->
+# aSync Chain!
+listPipelines = Q.nbind(eTrans.listPipelines, eTrans)
+createPipeline = Q.nbind(eTrans.createPipeline, eTrans)
+deletePipeline = Q.nbind(eTrans.deletePipeline, eTrans)
+
+
+
+listPipelines().then( (data) ->
   console.log(data)
 )
+
+
+#PsuedoCode:
+#findPipelines()
+#.then( pipelines) ->
+#  See if Right Pipline exists
+#.then( pipeline_to_use ) ->
+#  create workflow
