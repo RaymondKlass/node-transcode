@@ -14,6 +14,7 @@ pipeline_hash = (args...) ->
 
 
 
+
 # Elastic Transcoder
 eTrans = new AWS.ElasticTranscoder()
 
@@ -25,7 +26,9 @@ deletePipeline = Q.nbind(eTrans.deletePipeline, eTrans)
 
 
 listPipelines().then( (data) ->
-  console.log(data)
+  for pipeline in data.pipelines:
+    if pipeline.name == cur_pipeline
+      return pipeline
 )
 
 
