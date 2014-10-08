@@ -29,6 +29,8 @@ listPipelines().then( (data) ->
   for pipeline in data.pipelines:
     if pipeline.name == cur_pipeline
       return pipeline
+).then (data) ->
+  # here we would use the pipeline to start the job
 )
 
 
